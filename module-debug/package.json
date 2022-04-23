@@ -1,0 +1,49 @@
+{
+  "name": "module-debug",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "npm run pack:script && npm run clean:script && npm run copy:script && vue-cli-service serve",
+    "pack:script": "cd ../module-script && npm run build && cd ../module-debug",
+    "clean:script": "rimraf ./public/dist",
+    "copy:script": "cp -r ../module-script/dist ./public/dist",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "core-js": "^3.8.3",
+    "sql.js": "^1.6.2",
+    "vue": "^2.6.14"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "file-loader": "^6.2.0",
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
