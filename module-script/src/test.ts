@@ -9,18 +9,6 @@ function requireModule(moduleName: string): any {
     }
 }
 
-// (function () {
-//     const deviceInfo = global['deviceInfo']
-//     const database = global['database']
-//     if (deviceInfo == undefined) throw EvalError('deviceInfo is not exit')
-//     if (database == undefined) throw EvalError('database is not exit')
-
-//     nativeObject = {
-//         deviceInfo: deviceInfo,
-//         database: database
-//     }
-// })()
-
 class DBMoudle {
     fetchOne(sql: string): string {
         const deviceInfo = requireModule('deviceInfo')
@@ -45,8 +33,9 @@ class DBMoudle {
 }
 
 global['test'] = {
-    testFetchOne: function testFetchOne(id: string) {
+    testFetchOne: function testFetchOne() {
         const db = new DBMoudle()
-        db.fetchOne('')
+        const json = db.fetchOne("select * from User where username='Tom'")
+        return json
     }
 }
