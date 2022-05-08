@@ -12,6 +12,8 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import app.cash.quickjs.QuickJs
 import com.google.gson.Gson
+import me.xcyoung.quick.js.debug.JsEngineDebug
+import me.xcyoung.quick.js.debug.JsEngineDebugCallback
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -20,10 +22,6 @@ import java.nio.charset.Charset
 class MainActivity : AppCompatActivity() {
     private val quickJs: QuickJs by lazy {
         val quickJs = QuickJs.create()
-        val testJs = assetsToStr()
-        quickJs.set("deviceInfo", DeviceInfoInterface::class.java, DeviceInfo())
-        quickJs.set("database", DatabaseInterface::class.java, Database(this.applicationContext))
-        quickJs.evaluate(testJs)
         quickJs
     }
 
@@ -34,10 +32,43 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn).setOnClickListener {
             Thread {
                 copyDatabase()
+
+                val testJs = assetsToStr()
+                val database = Database(this.applicationContext)
+                quickJs.set("deviceInfo", DeviceInfoInterface::class.java, DeviceInfo())
+                quickJs.set("database", DatabaseInterface::class.java, database)
+                quickJs.evaluate(testJs)
                 val test = quickJs.get("test", TestInterface::class.java)
                 val userJson = test.testFetchOne()
                 Log.d(this.javaClass.simpleName, userJson)
+
+                database.dispose()
             }.start()
+        }
+
+        findViewById<Button>(R.id.testBtn).setOnClickListener {
+            copyDatabase()
+            val database = Database(this.applicationContext)
+
+            JsEngineDebug.Builder()
+                .host("http://x.x.x.x:8082")
+                .addCallback(object : JsEngineDebugCallback {
+                    override fun onExport(exports: Array<out String>?, js: QuickJs?) {
+                        exports ?: return
+                        js ?: return
+                        exports.forEach {
+                            if (it == "database") {
+                                js.set("database", DatabaseInterface::class.java, database)
+                            } else if (it == "deviceInfo") {
+                                js.set("deviceInfo", DeviceInfoInterface::class.java, DeviceInfo())
+                            }
+                        }
+                    }
+
+                    override fun onDispose() {
+                        database.dispose()
+                    }
+                }).build().start()
         }
     }
 
@@ -147,12 +178,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 if (!cursor.isClosed) cursor.close()
-                db.close()
                 val gson = Gson()
                 return gson.toJson(map)
             } catch (e: Exception) {
                 return "{}"
             }
+        }
+
+        fun dispose() {
+            db.close()
         }
     }
 

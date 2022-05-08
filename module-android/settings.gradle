@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "module-android"
 include ':app'
+include ':quick_js_debug'
+include ':quick_js_debug_no_op'
