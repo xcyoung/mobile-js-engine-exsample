@@ -2,17 +2,28 @@ PODS:
   - GRDB.swift (5.23.0):
     - GRDB.swift/standard (= 5.23.0)
   - GRDB.swift/standard (5.23.0)
+  - js-engine-debug (0.0.1):
+    - RxSwift (= 5.1.1)
+  - RxSwift (5.1.1)
 
 DEPENDENCIES:
   - GRDB.swift
+  - js-engine-debug (from `./js-engine-debug`)
 
 SPEC REPOS:
   trunk:
     - GRDB.swift
+    - RxSwift
+
+EXTERNAL SOURCES:
+  js-engine-debug:
+    :path: "./js-engine-debug"
 
 SPEC CHECKSUMS:
   GRDB.swift: e4a950fe99d113ea5d24571d49eaae0062303c14
+  js-engine-debug: 01a2fe7e515347f0cf93f45b2ede9a6582e72642
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
 
-PODFILE CHECKSUM: 0cc6bd9e40469980863f137d533db368a3a39daf
+PODFILE CHECKSUM: 1f347a0d43c107d666907ff84967d697294b7e6d
 
 COCOAPODS: 1.11.2

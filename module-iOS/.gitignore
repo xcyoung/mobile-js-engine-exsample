@@ -24,3 +24,6 @@ Pods
 !Podfile
 !Podfile.lock
 R.generated.swift
+
+js-engine-debug/Pods
+js-engine-debug/Podfile.lock

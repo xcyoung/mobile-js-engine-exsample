@@ -8,6 +8,7 @@
 import UIKit
 import JavaScriptCore
 import GRDB
+import js_engine_debug
 
 class ViewController: UIViewController {
     private let jsContext: JSContext = {
@@ -24,18 +25,29 @@ class ViewController: UIViewController {
         return ctx
     }()
     
+    private var debug: JsEngineDebug? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let btn: UIButton = {
             let btn = UIButton.init(type: .system)
             btn.backgroundColor = UIColor.blue
-            btn.frame = CGRect.init(x: self.view.center.x - 50, y: self.view.center.y - 25, width: 100, height: 50)
+            btn.frame = CGRect.init(x: self.view.center.x - 50, y: self.view.center.y - 75, width: 100, height: 50)
+            return btn
+        }()
+        
+        let testBtn: UIButton = {
+            let btn = UIButton.init(type: .system)
+            btn.backgroundColor = UIColor.blue
+            btn.frame = CGRect.init(x: self.view.center.x - 50, y: self.view.center.y + 75, width: 100, height: 50)
             return btn
         }()
         
         self.view.addSubview(btn)
+        self.view.addSubview(testBtn)
         btn.addTarget(self, action: #selector(onClick), for: .touchUpInside)
+        testBtn.addTarget(self, action: #selector(onTestClick), for: .touchUpInside)
     }
 
     @objc private func onClick() {
@@ -44,6 +56,25 @@ class ViewController: UIViewController {
         let result = testFetchOne.call(withArguments: [])!.toString()!
         
         debugPrint("ViewController", result)
+    }
+    
+    @objc private func onTestClick() {
+        self.debug = nil
+        
+        let debug = JsEngineDebugFactory.create(host: "http://x.x.x.x:8082") { exports, ctx in
+            exports.forEach { export in
+                if export == "deviceInfo" {
+                    ctx.setObject(DeviceInfo.init(), forKeyedSubscript: "deviceInfo" as NSCopying & NSObjectProtocol)
+                } else if export == "database" {
+                    ctx.setObject(Database.init(), forKeyedSubscript: "database" as NSCopying & NSObjectProtocol)
+                }
+            }
+        } onDispose: {
+            
+        }
+        
+        debug.start()
+        self.debug = debug
     }
 }
 
