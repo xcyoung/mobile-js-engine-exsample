@@ -12,7 +12,7 @@ describe('Test', () => {
         const deviceInfoObj = require('./exports/deviceInfo').default
         deviceInfoObj.loadDeviceInfo('Android')
 
-        require('../src/test')
+        require('../src/Test')
 
         const inferInterface = global['test']
             
@@ -30,7 +30,7 @@ describe('Test', () => {
         const deviceInfoObj = require('./exports/deviceInfo').default
         deviceInfoObj.loadDeviceInfo('iOS')
 
-        require('../src/test')
+        require('../src/Test')
 
         const inferInterface = global['test']
             
